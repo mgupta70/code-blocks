@@ -3,3 +3,5 @@
 1. Add L1, L2 regularization into Linear and Logistic Regression
 2. Demonstrate Outliers' impact on Linear and Logistic
 3. MSE loss on Logistic regression
+4. K-means with stopping criterias
+5. K-means ++
