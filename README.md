@@ -5,3 +5,4 @@
 3. MSE loss on Logistic regression
 4. K-means with stopping criterias
 5. K-means ++
+6. MSE loss vs CE loss for classification analysis
