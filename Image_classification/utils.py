@@ -3,12 +3,40 @@ import torch
 import torch.nn as nn
 from fastai.vision.all import *
 import gc
+import cv2
+from torch.utils.data import DataLoader, Dataset
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def clear_gpu_cache():
     gc.collect()
     torch.cuda.empty_cache()
+    
+class FlowerDataset_v2(Dataset):
+    ''' To increase the length of dataset with augmentations'''
+    def __init__(self, im_pths, targets, num_augmentations, transform = None, target_transform = None):
+        self.im_pths = im_pths
+        self.targets = targets
+        self.num_augmentations = num_augmentations
+        self.transform = transform
+        self.target_transform = target_transform
+        
+    def __len__(self):
+        return len(self.im_pths)*self.num_augmentations
+        
+    def __getitem__(self, idx):
+        actual_idx = idx // self.num_augmentations
+        augmentation_idx = idx % self.num_augmentations
+        
+        im_pth = str(self.im_pths[actual_idx])
+        image = Image.fromarray(cv2.cvtColor(cv2.imread(im_pth), cv2.COLOR_BGR2RGB))
+        label = self.targets[actual_idx]
+        if self.transform:
+            image = self.transform(image)
+        if self.target_transform:
+            label = self.target_transform(label)
+        return image, label
+
   
    
 def class_distribution_dataloader(dataloader):
